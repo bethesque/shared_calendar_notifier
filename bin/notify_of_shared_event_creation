@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+require 'optparse'
+#lib = File.expand_path('../../lib', __FILE__)
+#$: << lib
+require 'shared_calendar_notifier'
+
+options = {}.merge(SharedCalendarNotifier::DEFAULT_CONFIG)
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: notify_of_shared_event_creation [options]"
+
+  c_help = "Optional. The location of your Google API YAML file. Defaults to #{options[:google_api_config_file]}"
+  opts.on("-c", "--google-api-config-file CONFIG", c_help) do | file |
+    options[:google_api_config_file] = file
+  end
+
+  g_help = "Shared Google calendar name."
+  opts.on("-n", "--shared-calendar-name NAME", g_help) do | name |
+    options[:shared_calendar_name] = name
+  end
+
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+
+end.parse!
+
+SharedCalendarNotifier.run options
+
