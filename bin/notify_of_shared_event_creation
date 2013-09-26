@@ -18,13 +18,18 @@ OptionParser.new do |opts|
     options[:shared_calendar_name] = name
   end
 
+  d_helper = "Number of days ago to notify for."
+  opts.on("-d", "--days DAYS", d_helper) do | days |
+    options[:created_after_date] = days.to_i.days.ago
+  end
+
   v_helper = "Verbose."
   opts.on("-v", "--verbose", v_helper) do | verbose |
     options[:log_level] = :debug
   end
 
-  d_helper = "Dry run - do not send emails"
-  opts.on("-d", "--dry-run", d_helper) do | dry_run |
+  r_helper = "Dry run - do not send emails"
+  opts.on("-r", "--dry-run", r_helper) do | dry_run |
     options[:mail_delivery_method] = :test
   end
 

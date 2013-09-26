@@ -1,4 +1,3 @@
-puts $:
 require 'shared_calendar_notifier/logging'
 require 'shared_calendar_notifier/version'
 require 'shared_calendar_notifier/report'
@@ -21,7 +20,7 @@ module SharedCalendarNotifier
 
   DEFAULT_CONFIG = {
     :google_api_config_file => Pathname.new(ENV['HOME']) + '.google-api.yaml',
-    :created_after_date => 15.day.ago,
+    :created_after_date => 1.day.ago,
     :log_level => :info,
     :mail_delivery_method => :sendmail
   }.freeze
@@ -35,6 +34,7 @@ module SharedCalendarNotifier
       logger.error "Could not find calendar with name \"#{config[:shared_calendar_name]}\""
       exit 1
     end
+    logger.debug("Sending notifications for events created after #{config[:created_after_date]}")
     Time.zone = calendar.timezone
     notify config, calendar
   end
