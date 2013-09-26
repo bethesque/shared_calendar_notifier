@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
-#lib = File.expand_path('../../lib', __FILE__)
-#$: << lib
+#$: << File.expand_path('../../lib', __FILE__)
 require 'shared_calendar_notifier'
 
 options = {}.merge(SharedCalendarNotifier::DEFAULT_CONFIG)
@@ -17,6 +16,16 @@ OptionParser.new do |opts|
   g_help = "Shared Google calendar name."
   opts.on("-n", "--shared-calendar-name NAME", g_help) do | name |
     options[:shared_calendar_name] = name
+  end
+
+  v_helper = "Verbose."
+  opts.on("-v", "--verbose", v_helper) do | verbose |
+    options[:log_level] = :debug
+  end
+
+  d_helper = "Dry run - do not send emails"
+  opts.on("-d", "--dry-run", d_helper) do | dry_run |
+    options[:mail_delivery_method] = :test
   end
 
   opts.on( '-h', '--help', 'Display this screen' ) do

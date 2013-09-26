@@ -23,7 +23,7 @@ describe SharedCalendarNotifier do
     #FacebookGoogleCalendarSync::GoogleCalendar.stub(:configure).and_yield(double("Config", :google_api_config_file= => nil))
     SharedCalendarNotifier.stub(:configure_client).with('some/path')
     Mail::TestMailer.deliveries.clear
-    SharedCalendarNotifier.run :shared_calendar_name => "????", :created_after_date => cut_off_time, :google_api_config_file => 'some/path'
+    SharedCalendarNotifier.run :shared_calendar_name => "????", :created_after_date => cut_off_time, :google_api_config_file => 'some/path', :mail_delivery_method => :test
   end
 
   it { should have_sent_email.from('test@mailsender.com') }

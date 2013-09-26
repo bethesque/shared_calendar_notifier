@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "facebook-google-calendar-sync"
-  spec.add_dependency "activesupport", "~> 3.2"
+  spec.add_dependency "activesupport"
   spec.add_dependency "tzinfo", "~> 1.0"
   spec.add_dependency "mail", "~> 2.5"
   spec.add_dependency 'json', '~> 1.7.7'
