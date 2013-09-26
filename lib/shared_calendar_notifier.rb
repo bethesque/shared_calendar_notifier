@@ -3,6 +3,7 @@ require 'shared_calendar_notifier/version'
 require 'shared_calendar_notifier/report'
 require 'shared_calendar_notifier/report_email'
 require 'facebook_google_calendar_sync/google_calendar'
+require 'facebook_google_calendar_sync/timezone'
 
 module FacebookGoogleCalendarSync
   class GoogleCalendar
@@ -17,6 +18,7 @@ end
 module SharedCalendarNotifier
   extend self
   extend Logging
+  extend FacebookGoogleCalendarSync::Timezone
 
   DEFAULT_CONFIG = {
     :google_api_config_file => Pathname.new(ENV['HOME']) + '.google-api.yaml',
@@ -54,7 +56,10 @@ module SharedCalendarNotifier
   end
 
   def get_shared_calendar_by_name name
-    FacebookGoogleCalendarSync::GoogleCalendar.find_calendar name
+    calendar = FacebookGoogleCalendarSync::GoogleCalendar.find_calendar name
+    if calendar
+      with_timezone(calendar, calendar.timezone)
+    end
   end
 
   def self.configure config
