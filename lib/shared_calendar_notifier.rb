@@ -26,7 +26,6 @@ module SharedCalendarNotifier
   }.freeze
 
   def run runtime_config = {}
-    check_environment_config
     config = DEFAULT_CONFIG.merge runtime_config
     configure config
     calendar = get_shared_calendar_by_name config[:shared_calendar_name]
@@ -34,7 +33,6 @@ module SharedCalendarNotifier
       logger.error "Could not find calendar with name \"#{config[:shared_calendar_name]}\""
       exit 1
     end
-    logger.debug("Sending notifications for events created after #{config[:created_after_date]}")
     Time.zone = calendar.timezone
     notify config, calendar
   end
@@ -42,9 +40,11 @@ module SharedCalendarNotifier
   private
 
   def notify config, calendar
+    logger.debug("Searching for events created or updated after #{config[:created_after_date]}")
     reports = reports_for calendar, config[:created_after_date]
     report_emails = reports.collect { | report | ReportEmail.new report }
     report_emails.each(&:send)
+    logger.debug("No new events found") if report_emails.empty?
   end
 
   def reports_for calendar, created_after_date
@@ -58,16 +58,19 @@ module SharedCalendarNotifier
   end
 
   def self.configure config
+    check_environment_config
+    configure_logger config[:log_level]
     configure_mailer config[:mail_delivery_method]
     configure_client config[:google_api_config_file]
-    configure_logger config[:log_level]
   end
 
   def self.configure_mailer delivery_method
     Mail.defaults do
       delivery_method delivery_method
     end
-    logger.debug "Dry run - emails won't be delivered" if delivery_method == :test
+    if delivery_method == :test
+      logger.debug("Dry run - emails won't be delivered")
+    end
   end
 
   def self.configure_logger log_level
