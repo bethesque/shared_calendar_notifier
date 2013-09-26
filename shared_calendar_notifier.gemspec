@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["beth@bethesque.com"]
   spec.description   = "Sends notifications when events are created in the shared calendar."
   spec.summary       = "See description"
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/bethesque/shared_calendar_notifier"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

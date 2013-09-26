@@ -59,6 +59,7 @@ module SharedCalendarNotifier
 
   def self.configure config
     check_environment_config
+    raise "Please provider a calendar name" unless config[:shared_calendar_name]
     configure_logger config[:log_level]
     configure_mailer config[:mail_delivery_method]
     configure_client config[:google_api_config_file]
