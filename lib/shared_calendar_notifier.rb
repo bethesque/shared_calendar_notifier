@@ -75,6 +75,7 @@ module SharedCalendarNotifier
 
   def self.configure_logger log_level
     logger.level = Logger.const_get(log_level.to_s.upcase)
+    FacebookGoogleCalendarSync::GoogleCalendar.logger.level = logger.level
   end
 
   def check_environment_config
