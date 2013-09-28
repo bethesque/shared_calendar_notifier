@@ -4,21 +4,11 @@ require 'shared_calendar_notifier/report'
 require 'shared_calendar_notifier/report_email'
 require 'facebook_google_calendar_sync/google_calendar'
 require 'facebook_google_calendar_sync/timezone'
-
-module FacebookGoogleCalendarSync
-  class GoogleCalendar
-
-    def all_event_creators
-      events.collect { | event | event.creator}.uniq(&:email)
-    end
-
-  end
-end
+require 'ext/facebook_google_calendar_sync/google_calendar'
 
 module SharedCalendarNotifier
   extend self
   extend Logging
-  extend FacebookGoogleCalendarSync::Timezone
 
   DEFAULT_CONFIG = {
     :google_api_config_file => Pathname.new(ENV['HOME']) + '.google-api.yaml',
@@ -31,17 +21,13 @@ module SharedCalendarNotifier
     config = DEFAULT_CONFIG.merge runtime_config
     configure config
     calendar = get_shared_calendar_by_name config[:shared_calendar_name]
-    unless calendar
-      logger.error "Could not find calendar with name \"#{config[:shared_calendar_name]}\""
-      exit 1
-    end
-    Time.zone = calendar.timezone
     notify config, calendar
   end
 
   private
 
   def notify config, calendar
+    Time.zone = calendar.timezone
     logger.debug("Searching for events created or updated after #{config[:created_after_date]}")
     reports = reports_for calendar, config[:created_after_date]
     report_emails = reports.collect { | report | ReportEmail.new report }
@@ -56,10 +42,10 @@ module SharedCalendarNotifier
   end
 
   def get_shared_calendar_by_name name
-    calendar = FacebookGoogleCalendarSync::GoogleCalendar.find_calendar name
-    if calendar
-      with_timezone(calendar, calendar.timezone)
+    unless calendar = FacebookGoogleCalendarSync::GoogleCalendar.find_calendar(name)
+      raise "Could not find calendar with name \"#{name}\""
     end
+    calendar
   end
 
   def self.configure config

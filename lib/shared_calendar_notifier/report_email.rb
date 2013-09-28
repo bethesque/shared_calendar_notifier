@@ -64,7 +64,7 @@ module SharedCalendarNotifier
 
     def event_description event
       desc = event.summary
-      if start = formattted_event_start_time(event)
+      if start = formatted_event_start_time(event)
         desc << " - #{start}"
       end
       desc
@@ -78,9 +78,9 @@ module SharedCalendarNotifier
       event_description(event) + (event.location ? " at #{event.location}" : '')
     end
 
-    def formattted_event_start_time event
+    def formatted_event_start_time event
       if event.start.date_time
-        event.start.date_time.localtime.strftime('%a %d %b %Y %l:%M %P').gsub("  ", " ")
+        event.start.date_time.in_time_zone.strftime('%a %d %b %Y %l:%M %P').gsub("  ", " ")
       else
         nil
       end
