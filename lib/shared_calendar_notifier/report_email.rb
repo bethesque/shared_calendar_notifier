@@ -42,6 +42,7 @@ module SharedCalendarNotifier
       mail.subject = subject
       mail.body = body
       mail.deliver
+      self
     end
 
     private
