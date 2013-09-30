@@ -35,12 +35,12 @@ module SharedCalendarNotifier
     end
 
     def send
-      logger.debug("Sending #{to_s}")
       mail = Mail.new
-      mail.from = from
-      mail.to = recipient
-      mail.subject = subject
-      mail.body = body
+      mail.from = self.from
+      mail.to = self.recipient
+      mail.subject = self.subject
+      mail.body = self.body
+      logger.debug("Sending email:\n#{mail.to_s}")
       mail.deliver
       self
     end
@@ -64,7 +64,7 @@ module SharedCalendarNotifier
     end
 
     def event_description event
-      desc = event.summary
+      desc = event.summary.dup
       if start = formatted_event_start_time(event)
         desc << " - #{start}"
       end
