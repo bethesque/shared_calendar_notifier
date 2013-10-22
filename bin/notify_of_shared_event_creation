@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
-#$: << File.expand_path('../../lib', __FILE__)
+$: << File.expand_path('../../lib', __FILE__)
 require 'shared_calendar_notifier'
 
 options = {}.merge(SharedCalendarNotifier::DEFAULT_CONFIG)
@@ -8,29 +8,34 @@ options = {}.merge(SharedCalendarNotifier::DEFAULT_CONFIG)
 OptionParser.new do |opts|
   opts.banner = "Usage: notify_of_shared_event_creation [options]"
 
-  c_help = "Optional. The location of your Google API YAML file. Defaults to #{options[:google_api_config_file]}"
-  opts.on("-c", "--google-api-config-file CONFIG", c_help) do | file |
-    options[:google_api_config_file] = file
-  end
-
-  g_help = "Shared Google calendar name."
+  g_help = "Mandatory. Shared Google calendar name."
   opts.on("-n", "--shared-calendar-name NAME", g_help) do | name |
     options[:shared_calendar_name] = name
   end
 
-  d_helper = "Number of days ago to notify for."
+  c_help = "The location of your Google API YAML file. Default is #{options[:google_api_config_file]}"
+  opts.on("-c", "--google-api-config-file CONFIG", c_help) do | file |
+    options[:google_api_config_file] = file
+  end
+
+  d_helper = "Number of days ago to notify for. Default is 1."
   opts.on("-d", "--days DAYS", d_helper) do | days |
     options[:created_after_date] = days.to_i.days.ago
+  end
+
+  b_helper = "BCC email address"
+  opts.on("-b", "--bcc EMAIL_ADDRESS", b_helper) do | email_address |
+    options[:bcc] = email_address
+  end
+
+  r_helper = "Dry run - do not send emails."
+  opts.on("-r", "--dry-run", r_helper) do | dry_run |
+    options[:mail_delivery_method] = :test
   end
 
   v_helper = "Verbose."
   opts.on("-v", "--verbose", v_helper) do | verbose |
     options[:log_level] = :debug
-  end
-
-  r_helper = "Dry run - do not send emails"
-  opts.on("-r", "--dry-run", r_helper) do | dry_run |
-    options[:mail_delivery_method] = :test
   end
 
   opts.on( '-h', '--help', 'Display this screen' ) do

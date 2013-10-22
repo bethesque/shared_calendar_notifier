@@ -16,7 +16,8 @@ module SharedCalendarNotifier
     :google_api_config_file => Pathname.new(ENV['HOME']) + '.google-api.yaml',
     :created_after_date => 1.day.ago,
     :log_level => :info,
-    :mail_delivery_method => :sendmail
+    :mail_delivery_method => :sendmail,
+    :bcc => nil
   }.freeze
 
   def run runtime_config = {}
@@ -30,12 +31,12 @@ module SharedCalendarNotifier
   def send_notifications config
     calendar = get_shared_calendar_by_name config[:shared_calendar_name]
     Time.zone = calendar.timezone
-    notify_of_shared_events_created_after config[:created_after_date], calendar
+    notify_of_shared_events_created_after config[:created_after_date], calendar, config[:bcc]
   end
 
-  def notify_of_shared_events_created_after created_after_date, calendar
+  def notify_of_shared_events_created_after created_after_date, calendar, bcc
     with_logging(created_after_date) do
-      report_emails_for(calendar, created_after_date).each(&:send).size
+      report_emails_for(calendar, created_after_date, bcc).each(&:send).size
     end
   end
 
@@ -45,9 +46,9 @@ module SharedCalendarNotifier
     logger.debug("No new events found") if count == 0
   end
 
-  def report_emails_for calendar, created_after_date
+  def report_emails_for calendar, created_after_date, bcc
     reports = reports_for calendar, created_after_date
-    reports.collect { | report | ReportEmail.new report }
+    reports.collect { | report | ReportEmail.new report, bcc }
   end
 
   def reports_for calendar, created_after_date

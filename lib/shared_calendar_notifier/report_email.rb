@@ -10,8 +10,9 @@ module SharedCalendarNotifier
 
     EVENT_COUNT_IN_SUBJECT = 2
 
-    def initialize report
+    def initialize report, bcc
       @report = report
+      @bcc = bcc
     end
 
     def recipient
@@ -19,7 +20,7 @@ module SharedCalendarNotifier
     end
 
     def subject
-      "New shared events with Beth maybe"
+      "#{event_summaries_for_subject}#{more_events}"
     end
 
     def body
@@ -31,16 +32,17 @@ module SharedCalendarNotifier
     end
 
     def from
-      "\"New shared events\" <#{ENV['MAIL_SENDER']}>"
+      "\"New shared events with Beth maybe\" <#{ENV['MAIL_SENDER']}>"
     end
 
     def send
       mail = Mail.new
       mail.from = self.from
       mail.to = self.recipient
+      mail.bcc = bcc if
       mail.subject = self.subject
       mail.body = self.body
-      logger.debug("Sending email:\n#{mail.to_s}")
+      logger.debug("Sending email (with bcc: #{mail.bcc}):\n#{mail.to_s}")
       mail.deliver
       self
     end
@@ -87,9 +89,7 @@ module SharedCalendarNotifier
       end
     end
 
-    def report
-      @report
-    end
+    attr_reader :report, :bcc
 
     def events
       report.events
