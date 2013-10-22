@@ -19,7 +19,7 @@ module SharedCalendarNotifier
     end
 
     def subject
-      "#{event_summaries_for_subject}#{more_events}"
+      "New shared events with Beth maybe"
     end
 
     def body
