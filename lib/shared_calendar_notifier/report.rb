@@ -3,7 +3,7 @@ module SharedCalendarNotifier
     def self.build_report for_user, events, created_after_date
       Report.new(
         :user => for_user,
-        :events => events.find_all{ | event| event.created >= created_after_date && event.creator.email != for_user.email },
+        :events => events.find_all{ | event| event.updated >= created_after_date && event.creator.email != for_user.email },
         :created_after_date => created_after_date)
     end
   end
