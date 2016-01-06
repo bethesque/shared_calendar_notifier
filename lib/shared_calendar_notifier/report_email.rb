@@ -16,7 +16,7 @@ module SharedCalendarNotifier
     end
 
     def recipient
-      report.user.email
+      report.for_user_email_address
     end
 
     def subject
@@ -42,7 +42,7 @@ module SharedCalendarNotifier
       mail.bcc = bcc if
       mail.subject = self.subject
       mail.body = self.body
-      logger.debug("Sending email (with bcc: #{mail.bcc}):\n#{mail.to_s}")
+      logger.info("Sending email (with bcc: #{mail.bcc}):\n#{mail.to_s}")
       mail.deliver
       self
     end

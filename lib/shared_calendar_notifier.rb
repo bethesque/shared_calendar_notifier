@@ -5,7 +5,7 @@ require 'shared_calendar_notifier/report'
 require 'shared_calendar_notifier/report_email'
 require 'facebook_google_calendar_sync/google_calendar'
 require 'facebook_google_calendar_sync/timezone'
-require 'ext/facebook_google_calendar_sync/google_calendar'
+
 
 module SharedCalendarNotifier
   extend self
@@ -41,9 +41,9 @@ module SharedCalendarNotifier
   end
 
   def with_logging created_after_date
-    logger.debug("Searching for events created or updated after #{created_after_date}")
+    logger.info("Searching for events created or updated after #{created_after_date}")
     count = yield
-    logger.debug("No new events found") if count == 0
+    logger.info("No new events found") if count == 0
   end
 
   def report_emails_for calendar, created_after_date, bcc
@@ -52,8 +52,8 @@ module SharedCalendarNotifier
   end
 
   def reports_for calendar, created_after_date
-    calendar.all_event_creators.collect do | creator |
-     ReportBuilder.build_report creator, calendar.events, created_after_date
+    calendar.calendar_owner_email_addresses.collect do | email_address |
+     ReportBuilder.build_report email_address, calendar.events, created_after_date
     end.find_all &:any_events?
   end
 

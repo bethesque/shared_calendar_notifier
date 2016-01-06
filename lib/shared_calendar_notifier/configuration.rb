@@ -18,7 +18,7 @@ module SharedCalendarNotifier
         delivery_method delivery_method
       end
       if delivery_method == :test
-        logger.debug("Dry run - emails won't be delivered")
+        logger.info("Dry run - emails won't be delivered")
       end
     end
 

@@ -3,18 +3,20 @@ require 'spec_helper'
 describe SharedCalendarNotifier do
 
   let(:cut_off_time) { 60.minutes.ago }
-  let(:creator_1) { double(Object, :email => 'test1@email.com') }
-  let(:creator_2) { double(Object, :email => 'test2@email.com') }
-  let(:all_event_creators) { [creator_1, creator_2] }
+  let(:creator_1) { 'test1@email.com' }
+  let(:creator_2) { 'test2@email.com' }
+  let(:calendar_owner_email_addresses) { [creator_1, creator_2] }
   let(:included_event) {double('Event',
     :created => cut_off_time,
+    :updated => cut_off_time,
     :creator => creator_2,
     :summary => "An event",
     :start => double('GoogleDate', :date_time => Time.new(2013, 01, 14, 9, 30) ),
-    :location => "Somewhere")}
-  let(:excluded_event) { double('Event', :created => cut_off_time - 1.second) }
+    :location => "Somewhere",
+    :creator => double(:email => creator_2))}
+  let(:excluded_event) { double('ExcludedEvent', :created => cut_off_time - 1.second, :updated => cut_off_time - 1.second) }
   let(:events) { [ included_event, excluded_event ]}
-  let(:calendar) { double(FacebookGoogleCalendarSync::GoogleCalendar, :timezone => 'Melbourne', :all_event_creators => all_event_creators, :events => events) }
+  let(:calendar) { double(FacebookGoogleCalendarSync::GoogleCalendar, :timezone => 'Melbourne', :calendar_owner_email_addresses => calendar_owner_email_addresses, :events => events) }
 
   before do
     ENV['MAIL_SENDER'] = 'test@mailsender.com'

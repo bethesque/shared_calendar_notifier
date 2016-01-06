@@ -38,6 +38,11 @@ OptionParser.new do |opts|
     options[:log_level] = :debug
   end
 
+  q_helper = "Silent"
+  opts.on("-q", "--quiet", q_helper) do | verbose |
+    options[:log_level] = :error
+  end
+
   opts.on( '-h', '--help', 'Display this screen' ) do
     puts opts
     exit
