@@ -54,7 +54,7 @@ module SharedCalendarNotifier
     end
 
     def event_summaries_for_subject
-      event_descriptions_for(subject_events).join(", ")
+      events.collect{|event| event.summary}.join(", ")
     end
 
     def subject_events
