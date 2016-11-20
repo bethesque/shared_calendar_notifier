@@ -51,7 +51,7 @@ end
     end
 
     def get_future_events calendar_id
-      make_call :api_method => calendar_service.events.list, :parameters => {'calendarId' => calendar_id, 'updatedMin' => "2016-01-01T00:00:00+11:00"}
+      make_call :api_method => calendar_service.events.list, :parameters => {'calendarId' => calendar_id, 'timeMin' => DateTime.now.xmlschema}
     end
 
     def add_event calendar_id, event
