@@ -6,6 +6,7 @@ module SharedCalendarNotifier
     extend Logging
 
     def configure config
+      logger.debug "Running with configuration #{config}"
       check_environment_config
       raise "Please provider a calendar name" unless config[:shared_calendar_name]
       configure_logger config[:log_level]
