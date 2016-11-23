@@ -24,7 +24,7 @@ module SharedCalendarNotifier
     end
 
     def body
-      (["New or updated shared events:"] + event_body_descriptions_for(events)).join("\n")
+      event_body_descriptions_for(events).join("\n")
     end
 
     def to_s
