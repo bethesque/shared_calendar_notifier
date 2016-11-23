@@ -2,11 +2,13 @@ require 'active_support/time'
 require 'tzinfo'
 require 'mail'
 require 'shared_calendar_notifier/logging'
+require 'shared_calendar_notifier/date_helper'
 
 module SharedCalendarNotifier
   class ReportEmail
 
     include Logging
+    include DateHelper
 
     EVENT_COUNT_IN_SUBJECT = 2
 
@@ -83,10 +85,14 @@ module SharedCalendarNotifier
 
     def formatted_event_start_time event
       if event.start.date_time
-        event.start.date_time.in_time_zone.strftime('%a %d %b %Y %l:%M %P').gsub("  ", " ")
+        relative_date_in_words(event.start.date_time.to_date)
       else
         nil
       end
+    end
+
+    def days_away date_time
+      (date_time.to_date - DateTime.now.to_date).to_i
     end
 
     attr_reader :report, :bcc
