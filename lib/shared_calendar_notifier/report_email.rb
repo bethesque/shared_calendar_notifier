@@ -86,6 +86,8 @@ module SharedCalendarNotifier
     def formatted_event_start_time event
       if event.start.date_time
         relative_date_in_words(event.start.date_time.to_date)
+      elsif event.start.date
+        relative_date_in_words(Date.parse(event.start.date))
       else
         nil
       end

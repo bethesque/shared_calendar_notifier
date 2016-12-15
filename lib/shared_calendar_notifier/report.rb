@@ -13,7 +13,9 @@ module SharedCalendarNotifier
         event.updated >= created_after_date &&
         event.creator.email != for_user_email_address
       end.sort do | event_1, event_2 |
-        event_1.start.date_time <=> event_2.start.date_time
+        date_1 = event_1.start.date_time || event_1.start.date.to_date
+        date_2 = event_2.start.date_time || event_2.start.date.to_date
+        date_1 <=> date_2
       end
     end
   end
