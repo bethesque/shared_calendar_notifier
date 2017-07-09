@@ -18,7 +18,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Local testing:
+
+bundle exec dotenv bin/notify_of_shared_event_creation -n SHARED_CALENDAR_NAME -v -b BCC_EMAIL_ADDRESS --dry-run
+
 
 ## Contributing
 

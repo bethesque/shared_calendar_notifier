@@ -16,7 +16,17 @@ module SharedCalendarNotifier
     :google_api_config_file => Pathname.new(ENV['HOME']) + '.google-api.yaml',
     :created_after_date => 1.day.ago,
     :log_level => :info,
-    :mail_delivery_method => :sendmail,
+    :mail_delivery_method => :smtp,
+    :mail_delivery_options => {
+      :address              => ENV.fetch('SMTP_HOST', 'smtp.gmail.com'),
+      :port                 => ENV.fetch('SMTP_PORT', '465').to_i,
+      :domain               => ENV.fetch('SMTP_DOMAIN', 'localhost.localdomain'),
+      :user_name            => ENV['SMTP_USERNAME'],
+      :password             => ENV['SMTP_PASSWORD'],
+      :authentication       => 'plain',
+      :tls => true,
+      :enable_starttls_auto => true
+    },
     :bcc => nil
   }.freeze
 

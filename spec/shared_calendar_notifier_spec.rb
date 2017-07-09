@@ -21,6 +21,8 @@ describe SharedCalendarNotifier do
 
   before do
     ENV['MAIL_SENDER'] = 'test@mailsender.com'
+    ENV['SMTP_USERNAME'] = 'test@mailsender.com'
+    ENV['SMTP_PASSWORD'] = 'password'
     FacebookGoogleCalendarSync::GoogleCalendar.stub(:find_calendar).and_return(calendar)
     #Why does this not work???
     #FacebookGoogleCalendarSync::GoogleCalendar.stub(:configure).and_yield(double("Config", :google_api_config_file= => nil))
